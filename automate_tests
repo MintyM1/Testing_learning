@@ -1,0 +1,93 @@
+# Automate the boring stuff - Chapter 9
+
+#! python3
+# randomQuizGenerator.py - Creates quizzes with questions and answers in
+# random order, along with the answer key.
+
+
+# Seems like a generic process - if you want to iterate over a dictionary item -> convert the whole thing to a list
+# so list[i] can loop over the whole database
+
+
+
+import random
+
+# The quiz data. Keys are states and values are their capitals.
+capitals = {'Alabama': 'Montgomery', 'Alaska': 'Juneau', 'Arizona': 'Phoenix',
+'Arkansas': 'Little Rock', 'California': 'Sacramento', 'Colorado': 'Denver',
+'Connecticut': 'Hartford', 'Delaware': 'Dover', 'Florida': 'Tallahassee',
+'Georgia': 'Atlanta', 'Hawaii': 'Honolulu', 'Idaho': 'Boise', 'Illinois':
+'Springfield', 'Indiana': 'Indianapolis', 'Iowa': 'Des Moines', 'Kansas':
+'Topeka', 'Kentucky': 'Frankfort', 'Louisiana': 'Baton Rouge', 'Maine':
+'Augusta', 'Maryland': 'Annapolis', 'Massachusetts': 'Boston', 'Michigan':
+'Lansing', 'Minnesota': 'Saint Paul', 'Mississippi': 'Jackson', 'Missouri':
+'Jefferson City', 'Montana': 'Helena', 'Nebraska': 'Lincoln', 'Nevada':
+'Carson City', 'New Hampshire': 'Concord', 'New Jersey': 'Trenton', 'New \
+Mexico': 'Santa Fe', 'New York': 'Albany', 'North Carolina': 'Raleigh',
+'North Dakota': 'Bismarck', 'Ohio': 'Columbus', 'Oklahoma': 'Oklahoma City',
+'Oregon': 'Salem', 'Pennsylvania': 'Harrisburg', 'Rhode Island': 'Providence',
+'South Carolina': 'Columbia', 'South Dakota': 'Pierre', 'Tennessee':
+'Nashville', 'Texas': 'Austin', 'Utah': 'Salt Lake City', 'Vermont':
+'Montpelier', 'Virginia': 'Richmond', 'Washington': 'Olympia', 'West \
+Virginia': 'Charleston', 'Wisconsin': 'Madison', 'Wyoming': 'Cheyenne'}
+
+# Dictionary type
+type(capitals)
+
+
+#Keys = states
+#Values = Capital city
+
+# Dictionary (key) = Value (capital city) 
+capitals['Maryland']
+
+for quizNum in range(35):
+    quizfile = open(f'capitalsquiz{quizNum + 1}.txt', 'w')
+    answerkey = open(f'capitalsquiz_answers{quizNum+1}.txt', 'w')
+
+    quizfile.write('Name:\n\nDate:\n\nPeriod:\n\n')
+    quizfile.write((' '*20) + f'State Capitals Quiz (Form {quizNum + 1})')
+    quizfile.write('\n\n')
+
+
+    # List of states generated from the K variable
+    states = list(capitals.keys())
+    random.shuffle(states)
+
+    # states is now a list from 0:50 which you can loop over
+    type(states)
+    states
+
+
+    for qnum in range (50):
+    
+        #capitals is still a dictionary -> input key, output value -> 
+        #list of keys (states) which are being looped
+        #input state -> output single value (the capital city) 
+        
+        correctAnswer = capitals[states[qnum]]
+        
+        #wrong answer is now a list of all answers (list of values)
+        #find index of correct answer and remove it (index finds the first value remember)
+        
+        wrongAnswer = list(capitals.values())
+        del wrongAnswer[wrongAnswer.index(correctAnswer)]
+        wrongAnswer = random.sample(wrongAnswer, 3)
+        
+        #Correct answer has to be in a list to concatenate list
+        
+        answerOptions = wrongAnswer + [correctAnswer]
+        random.shuffle(answerOptions)
+
+        quizfile.write(f'{qnum + 1}. What is the capital of {states[qnum]}? \n')
+        for i in range (4):
+            quizfile.write(f"{'ABCD'[i]}. {answerOptions[i]}\n")
+        quizfile.write('\n')
+
+        answerkey.write(f"{qnum + 1}. {'ABCD'[answerOptions.index(correctAnswer)]}\n")
+
+    quizfile.close()
+    answerkey.close()
+
+
+
